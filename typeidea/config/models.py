@@ -1,6 +1,6 @@
-from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.loader import render_to_string
 
 
 class Link(models.Model):
@@ -22,6 +22,10 @@ class Link(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = "友链"
+        ordering = ['-weight', ]
+
+    def __str__(self):
+        return self.title
 
 
 class SideBar(models.Model):
@@ -50,6 +54,9 @@ class SideBar(models.Model):
     status = models.PositiveIntegerField(default=STATUS_SHOW, choices=STATUS_ITEMS, verbose_name="状态")
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.DO_NOTHING)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __str__(self):
+        return self.title
 
     @classmethod
     def get_all(cls):

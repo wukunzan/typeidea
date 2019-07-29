@@ -1,3 +1,5 @@
+import mistune
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -84,6 +86,10 @@ class Post(models.Model):
     def hot_posts(cls):
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
 
+    @classmethod
+    def latest_posts(cls):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+
     class Meta:
         verbose_name = verbose_name_plural = "文章"
         ordering = ['-id']
@@ -91,7 +97,13 @@ class Post(models.Model):
     def __str__(self):
         return self.title    
 
-
+    def save(self, *args, **kwargs):
+        if self.is_md:
+            self.content_html = mistune.markdown(self.content)
+        else:
+            self.content_html = self.content
+        super().save(*args, **kwargs)
+        
     @staticmethod
     def get_by_tag(tag_id):
         try:
@@ -115,6 +127,4 @@ class Post(models.Model):
             return post_list,category
 
 
-    @classmethod
-    def latest_posts(cls):
-        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+    
