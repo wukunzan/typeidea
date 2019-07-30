@@ -40,23 +40,25 @@
 	
     <div class="container main">
         <div class="row">
-            <div class="col-8 post-list">
-                {% block main %}
+            <div class="col-9 post-list">
+            {% block main %}
+            {% endblock %}
+            </div>
+            <div class="col-3">
+                {% block sidebar %}
+                    {% for sidebar in sidebars %}
+                    <div class="card sidebar">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ sidebar.title }}</h4>
+                            <p>
+                            {{ sidebar.content_html }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
                 {% endblock %}
             </div>
-            <div class="col-4">
-                {% block sidebar %}
-                {% for sidebar in sidebars %}
-                    <div class="card sidebar">
-                        <h4 class="card-title">{{ sidebar.title }}</h4>
-                    <p>
-                        {{ sidebar.content_html}}
-                    </p>
-                    </div>
-                 {% endfor %}
-                 {% endblock %}
-            </div>      
-         </div>
+        </div>
     </div>
 
 
